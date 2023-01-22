@@ -1,76 +1,29 @@
 #include "monty.h"
 
 /**
- * monty - entry point
+ * main - opens a monty script file for parsing
+ * @argc: count of arguments
+ * @argv: array of arguments
  *
- * Description: starts monty interpreter
+ * Return: EXIT_SUCCESS on success, EXIT_FAILURE on failure
  */
-void monty(void)
+int main(int argc, char *argv[])
 {
-	char line[MAX_LEN];
-	size_t line_len = MAX_LEN - 1;
-	unsigned int line_number = 0;
+	FILE *file;
 
-	/* read line from input */
-	while (fgets(line, line_len, op.input))
+	if (argc != 2)
 	{
-		line_number++;
-		exec_op(line, line_number);
-	}
-}
-
-/**
- * exec_op - entry point
- *
- * Description: checks if a gien string is a
- * alid operation and executes it
- * @line: string
- * @line_number: line number of current instruction
- */
-void exec_op(char *line, unsigned int line_number)
-{
-	void (*f)(stack_t **, unsigned int);
-	char *message;
-
-	get_op(line);
-
-	if (op.opcode == NULL || op.opcode[0] == '#')
-		return;
-
-	f = get_op_func();
-	if (f == NULL)
-	{
-		message = "L%u: unknown instruction %s\n";
-		fprintf(stderr, message, line_number, op.opcode);
-		free_op();
+		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	f(&(op.head), line_number);
-}
 
-/**
- * get_op - entry point
- *
- * Description: gets the correct operation from a given string and updates op
- * @line: string
- */
-void get_op(char *line)
-{
-	char *str = line;
-
-	while (*str)
+	file = fopen(argv[1], "r");
+	if (!file)
 	{
-		if (*str < ' ')
-			*str = ' ';
-		str++;
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		exit(EXIT_FAILURE);
 	}
 
-	if (op.opcode)
-		free(op.opcode);
-
-	if (op.arg)
-		free(op.arg);
-
-	op.opcode = _strdup(_strtok(line, " "));
-	op.arg = _strdup(_strtok(NULL, " "));
+	parsefile(file);
+	return (EXIT_SUCCESS);
 }
