@@ -1,12 +1,14 @@
 #include "monty.h"
+
 /**
-  *f_nop- nothing
-  *@head: stack head
-  *@counter: line_number
-  *Return: no return
+ * op_nop - entry point
+ *
+ * Description: does nothing
+ * @stack: pointer to the pointer of first element
+ * @line_number: line number of the instruction
  */
-void f_nop(stack_t **head, unsigned int counter)
+void op_nop(stack_t **stack, unsigned int line_number)
 {
-	(void) counter;
-	(void) head;
+	(void)stack;
+	(void)line_number;
 }
